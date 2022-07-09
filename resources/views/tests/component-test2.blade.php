@@ -1,0 +1,1 @@
+component-test2です。
