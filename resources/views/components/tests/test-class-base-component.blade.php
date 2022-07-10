@@ -1,4 +1,5 @@
 <div>
-    <!-- Walk as if you are kissing the Earth with your feet. - Thich Nhat Hanh -->
     クラスベースのコンポーネントです。
+    <div>{{ $classBaseMessage }}</div>
+    <div>{{ $defaultMessage }}</div>
 </div>
