@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Owner;               //Eloquent
+use Illuminate\Support\Facades\DB;  //QueryBuilder
+use Carbon\Carbon;
 
 class OwnersController extends Controller
 {
@@ -12,15 +15,31 @@ class OwnersController extends Controller
     {
         $this->middleware('auth:admin');
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
+        // $date_now = Carbon::now();
+        // $date_parse = Carbon::parse(now());
+        // echo $date_now;
+        // echo nl2br("\n");
+        // echo $date_now->year;
+        // echo nl2br("\n");
+        // echo $date_parse;
         //一覧
-        dd('オーナー一覧です');
+        $e_all = Owner::all();
+        $q_get = DB::table('owners')->select('name','created_at')->get();
+        // $q_first = DB::table('owners')->select('name')->first();
+
+        // $c_test = collect([
+        //     'name' => 'テスト'
+        // ]);
+
+        // echo nl2br("\n");
+        // var_dump($q_first);
+
+        // dd($e_all,$q_get,$q_first,$c_test);
+
+        return view('admin.owners.index', compact('e_all', 'q_get'));
     }
 
     /**
