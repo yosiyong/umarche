@@ -18,28 +18,11 @@ class OwnersController extends Controller
 
     public function index()
     {
-        // $date_now = Carbon::now();
-        // $date_parse = Carbon::parse(now());
-        // echo $date_now;
-        // echo nl2br("\n");
-        // echo $date_now->year;
-        // echo nl2br("\n");
-        // echo $date_parse;
-        //一覧
-        $e_all = Owner::all();
-        $q_get = DB::table('owners')->select('name','created_at')->get();
-        // $q_first = DB::table('owners')->select('name')->first();
+        //一覧データ
+        // $e_all = Owner::all();
+        $owners = OWner::select('name','email','created_at')->get();
 
-        // $c_test = collect([
-        //     'name' => 'テスト'
-        // ]);
-
-        // echo nl2br("\n");
-        // var_dump($q_first);
-
-        // dd($e_all,$q_get,$q_first,$c_test);
-
-        return view('admin.owners.index', compact('e_all', 'q_get'));
+        return view('admin.owners.index', compact('owners'));
     }
 
     /**
@@ -49,7 +32,8 @@ class OwnersController extends Controller
      */
     public function create()
     {
-        //
+        //新規作成
+        return view('admin.owners.create');
     }
 
     /**
