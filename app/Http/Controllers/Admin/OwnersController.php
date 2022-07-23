@@ -21,7 +21,7 @@ class OwnersController extends Controller
     {
         //一覧データ
         // $e_all = Owner::all();
-        $owners = OWner::select('id', 'name','email','created_at')->get();
+        $owners = OWner::select('id', 'name','email','created_at')->paginate(3);
 
         return view('admin.owners.index', compact('owners'));
     }
