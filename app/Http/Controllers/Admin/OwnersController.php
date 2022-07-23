@@ -8,6 +8,9 @@ use App\Models\Owner;               //Eloquent
 use Illuminate\Support\Facades\DB;  //QueryBuilder
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Throwable;
+use Illuminate\Support\Facades\Log;
+use App\Models\Shop;
 
 class OwnersController extends Controller
 {
@@ -52,12 +55,29 @@ class OwnersController extends Controller
             'password' => 'required|string|confirmed|min:8',
         ]);
 
-        //新規登録
-        Owner::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try{
+            DB::transaction(function() use($request){
+                 //オーナー新規作成
+                $owner = Owner::create([
+                                'name' => $request->name,
+                                'email' => $request->email,
+                                'password' => Hash::make($request->password),
+                                ]);
+
+                Shop::create([
+                    'owner_id' => $owner->id,
+                    'name' => 'ショップ名',
+                    'information' => 'ショップ情報',
+                    'filename' => '',
+                    'is_selling' => true
+                ]);
+
+            }, 2);
+        }catch(Throwable $e){
+            //storage\logs\laravel.log
+            Log::error($e);
+            throw $e;
+        }
 
         return redirect()
         ->route('admin.owners.index')
