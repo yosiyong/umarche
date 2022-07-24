@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Shop;
+use App\Http\Requests\UploadImageRequest;
+use App\Services\ImageService;
 
 class ShopController extends Controller
 {
@@ -51,21 +54,20 @@ class ShopController extends Controller
         //指定idの変更
         $shop = Shop::findOrFail($id);
 
-        return view('shops.edit',compact('shop'));
+        return view('owner.shops.edit',compact('shop'));
     }
 
     public function update(Request $request, $id)
     {
-        //指定idのデータをDB更新
-        $shop = Shop::findOrFail($id);
-        $shop->name = $request->name;
-        $shop->information = $request->information;
-        $shop->filename = $request->filename;
-        $shop->is_selling = $request->is_selling;
-        $shop->save();
+        $imageFile = $request->image; //一時保存
 
-        return redirect()
-        ->route('shops.index')
-        ->with(['message'=>'店舗情報を更新しました。','status'=>'info']);
+        //ファイル名あり、かつ、アップロードされているのか
+        if(!is_null($imageFile) && $imageFile->isValid() ){
+            //指定パスに（なければ、フォルダ作成）、指定ファイルを保存（ファイル名自動生成）
+            //storage\app\public\shopsに$imageFile名で保存
+            Storage::putFile('public/shops', $imageFile);
+        }
+
+        return redirect()->route('owner.shops.index');
     }
 }
