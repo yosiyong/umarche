@@ -45,11 +45,6 @@ class ImageSeeder extends Seeder
                 'filename' => 'sample6.jpg',
                 'title' => null
             ],
-            [
-                'owner_id' => 7,
-                'filename' => 'sample7.jpg',
-                'title' => null
-            ],
         ]);
     }
 }
