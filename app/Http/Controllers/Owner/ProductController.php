@@ -54,14 +54,18 @@ class ProductController extends Controller
         ->get();
 
         $images = Image::where('owner_id', Auth::id())
-        ->select('id', 'title','filename')
+        ->select('id', 'title', 'filename')
         ->orderBy('updated_at', 'desc')
         ->get();
+
+        //dd($shops,$images);
 
         $categories = PrimaryCategory::with('secondary')
         ->get();
 
-        return view('owner.products.create',compact('shops','images','categories'));
+        return view('owner.products.create',
+            compact('shops', 'images', 'categories'));
+
     }
 
     /**

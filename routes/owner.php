@@ -47,6 +47,10 @@ Route::get('/dashboard', function () {
     return view('owner.dashboard');
 })->middleware(['auth:owners'])->name('dashboard');
 
+Route::get('/micromodal', function () {
+    return view('owner.micromodal');
+})->middleware(['auth:owners'])->name('micromodal');
+
 
 Route::get('/register', [RegisteredUserController::class, 'create'])
                 ->middleware('guest')
