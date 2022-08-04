@@ -25,9 +25,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('owner.welcome');
-});
+// Route::get('/', function () {
+//     return view('owner.welcome');
+// });
 
 Route::prefix('shops')
 ->middleware('auth:owners')
@@ -51,7 +51,7 @@ Route::get('/micromodal', function () {
     return view('owner.micromodal');
 })->middleware(['auth:owners'])->name('micromodal');
 
-
+//オーナー登録処理：http://127.0.0.1:8000/owner/register
 Route::get('/register', [RegisteredUserController::class, 'create'])
                 ->middleware('guest')
                 ->name('register');
