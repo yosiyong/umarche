@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ComponentTestController;
 use App\Http\Controllers\LifeCycleTestController;
+use App\Http\Controllers\User\ItemController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,13 +15,20 @@ use App\Http\Controllers\LifeCycleTestController;
 |
 */
 
+//[/]:ログインしない状態ならwelcome画面を表示する。
 Route::get('/', function () {
     return view('user.welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('user.dashboard');
-})->middleware(['auth:users'])->name('dashboard');
+//[/]:ログインしたら商品一覧画面(ItemControllerのindex)を表示する
+Route::middleware('auth:users')
+->group(function(){
+	Route::get('/', [ItemController::class,'index'])->name('items.index');
+});
+
+// Route::get('/dashboard', function () {
+//     return view('user.dashboard');
+// })->middleware(['auth:users'])->name('dashboard');
 
 
 Route::get('/component-test1', [ComponentTestController::class, 'showComponent1']);
