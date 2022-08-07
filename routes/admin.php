@@ -26,6 +26,10 @@ use Illuminate\Support\Facades\Route;
 //     return view('admin.welcome');
 // });
 
+Route::get('/', function () {
+    return view('admin.dashboard');
+})->middleware(['auth:admin'])->name('dashboard');
+
 Route::resource('owners', OwnersController::class)
 ->middleware('auth:admin')->except(['show']);
 

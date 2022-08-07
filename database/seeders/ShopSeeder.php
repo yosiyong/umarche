@@ -14,6 +14,7 @@ class ShopSeeder extends Seeder
      */
     public function run()
     {
+        //注意：１オーナーに対して１店舗自動作成される仕様なので、ownersと1:1になることを確認すること
         DB::table('shops')->insert([
             [
                 'owner_id' => 1,

@@ -60,6 +60,11 @@ class CategorySeeder extends Seeder
                 'sort_order' => 6,
                 'primary_category_id' => 2
             ],
+            [
+                'name' => 'ベビーカー',
+                'sort_order' => 7,
+                'primary_category_id' => 3
+            ],
         ]);
     }
 }

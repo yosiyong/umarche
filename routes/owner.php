@@ -29,6 +29,10 @@ use Illuminate\Support\Facades\Route;
 //     return view('owner.welcome');
 // });
 
+Route::get('/', function () {
+    return view('owner.dashboard');
+})->middleware(['auth:owners'])->name('dashboard');
+
 Route::prefix('shops')
 ->middleware('auth:owners')
 ->group(function(){

@@ -64,6 +64,7 @@ class OwnersController extends Controller
                                 'password' => Hash::make($request->password),
                                 ]);
 
+                //１オーナーに対して１店舗自動作成
                 Shop::create([
                     'owner_id' => $owner->id,
                     'name' => 'ショップ名',
@@ -85,17 +86,6 @@ class OwnersController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -105,6 +95,8 @@ class OwnersController extends Controller
     {
         //指定idの変更
         $owner = Owner::findOrFail($id);
+
+        //dd($id,$owner);
 
         return view('admin.owners.edit',compact('owner'));
     }
