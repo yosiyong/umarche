@@ -20,14 +20,14 @@ class ShopSeeder extends Seeder
                 'owner_id' => 1,
                 'name' => 'ショップ名1',
                 'information' => 'ショップ情報1',
-                'filename' => '',
+                'filename' => 'sample1.jpg',
                 'is_selling' => true
             ],
             [
                 'owner_id' => 2,
                 'name' => 'ショップ名2',
                 'information' => 'ショップ情報2',
-                'filename' => '',
+                'filename' => 'sample2.jpg',
                 'is_selling' => true
             ],
         ]);
