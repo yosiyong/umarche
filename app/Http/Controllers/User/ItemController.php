@@ -91,15 +91,15 @@ class ItemController extends Controller
     public function show($id)
     {
         $product = Product::findOrFail($id);
-        // $quantity = Stock::where('product_id', $product->id)
-        // ->sum('quantity');
+        $quantity = Stock::where('product_id', $product->id)
+        ->sum('quantity');
 
-        // if($quantity > 9){
-        //     $quantity = 9;
-        //   }
+        //表示の最大値
+        if($quantity > 9){
+            $quantity = 9;
+        }
 
-        return view('user.show',compact('product'));
-        // return view('user.show',
-        // compact('product', 'quantity'));
+        return view('user.show',
+        compact('product', 'quantity'));
     }
 }
