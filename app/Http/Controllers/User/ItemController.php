@@ -91,6 +91,8 @@ class ItemController extends Controller
     public function show($id)
     {
         $product = Product::findOrFail($id);
+
+        //指定商品の数量取得
         $quantity = Stock::where('product_id', $product->id)
         ->sum('quantity');
 
