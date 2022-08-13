@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use app\Models\Product;
+use App\Models\Product;
 
 class User extends Authenticatable
 {
@@ -46,6 +46,6 @@ class User extends Authenticatable
     public function products()
     {
         return $this->belongsToMany(Product::class, 'carts')
-        ->withPivot(['id', 'quantity']); 
+        ->withPivot(['id', 'quantity']);
     }
 }

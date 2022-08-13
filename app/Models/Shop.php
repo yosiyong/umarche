@@ -16,7 +16,7 @@ class Shop extends Model
         'name',
         'information',
         'filename',
-        'is_selling',
+        'is_selling'
     ];
 
     public function owner()

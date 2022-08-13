@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\User;
+use App\Models\Stock;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -21,7 +22,7 @@ class CartController extends Controller
             $totalPrice += $product->price * $product->pivot->quantity;
         }
 
-        // dd($products, $totalPrice);
+        //dd($products, $totalPrice);
 
         return view('user.cart',
             compact('products', 'totalPrice'));
@@ -46,6 +47,8 @@ class CartController extends Controller
                 'quantity' => $request->quantity
             ]);
         }
+
+        //dd($request,$itemInCart);
 
         //カート一覧画面表示
         return redirect()->route('user.cart.index');
