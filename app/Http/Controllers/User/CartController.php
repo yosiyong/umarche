@@ -66,27 +66,47 @@ class CartController extends Controller
 
     public function checkout()
     {
-
         $user = User::findOrFail(Auth::id());
+        $products = $user->products;
 
         //ユーザーの商品取得してstripに渡す配列を生成
-        $line_items = [];
-        foreach($user->products as $product){
-            $line_item = [
-                'name' => $product->name,
-                'description' => $product->description,
-                'amount' => $product->price,
-                'currency' => 'jpy',
-                'quantity' => $product->pivot->quantity,
-            ];
-            array_push($line_items, $line_item);
+        $lineItems = [];
+        foreach($products as $product){
+            //在庫情報取得
+            $quantity = '';
+            $quantity = Stock::where('product_id', $product->id)->sum('quantity');
+
+            //カートの商品数と在庫を比較
+            if($product->pivot->quantity > $quantity){
+                //在庫が足りない場合
+                return redirect()->route('user.cart.index');
+            } else {
+                //在庫がある場合、strip側に渡す配列に商品情報をセットする。
+                $lineItem = [
+                    'name' => $product->name,
+                    'description' => $product->information,
+                    'amount' => $product->price,
+                    'currency' => 'jpy',
+                    'quantity' => $product->pivot->quantity,
+                ];
+                array_push($lineItems, $lineItem);
+            }
+        }
+
+        //決済する前に在庫を減らす
+        foreach($products as $product){
+            Stock::create([
+                'product_id' => $product->id,
+                'type' => \Constant::PRODUCT_LIST['reduce'],
+                'quantity' => $product->pivot->quantity * -1
+            ]);
         }
 
         //dd($line_items);
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
         $session = \Stripe\Checkout\Session::create([
-            'line_items' => [$line_items],
+            'line_items' => [$lineItems],
             'mode' => 'payment',
             'success_url' => route('user.items.index'),
             'cancel_url' => route('user.cart.index'),
