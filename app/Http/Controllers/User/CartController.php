@@ -83,15 +83,22 @@ class CartController extends Controller
             } else {
                 //在庫がある場合、strip側に渡す配列に商品情報をセットする。
                 $lineItem = [
-                    'name' => $product->name,
-                    'description' => $product->information,
-                    'amount' => $product->price,
-                    'currency' => 'jpy',
+                    'price_data' => [
+                        'currency' => 'jpy',
+                        'product_data' => [
+                            'name' => $product->name,
+                            'description' => $product->information,
+                            'images' => [asset('storage/products/' . $product->imageFirst->filename )]
+                        ],
+                        'unit_amount' => $product->price
+                    ],
                     'quantity' => $product->pivot->quantity,
                 ];
                 array_push($lineItems, $lineItem);
             }
         }
+
+        //dd($lineItems);
 
         //決済する前に在庫を減らす
         foreach($products as $product){
@@ -102,7 +109,6 @@ class CartController extends Controller
             ]);
         }
 
-        //dd($line_items);
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
         $session = \Stripe\Checkout\Session::create([
@@ -112,8 +118,7 @@ class CartController extends Controller
             'cancel_url' => route('user.cart.index'),
         ]);
 
-        $publicKey = env('STRIPE_PUBLIC_KEY');
-
-        return view('user.checkout',compact('session','publicKey'));
+         //return view('user.checkout',compact('session','publicKey'));
+        return redirect($session->url, 303);
     }
 }
