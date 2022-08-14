@@ -16,50 +16,37 @@ class ItemController extends Controller
 {
     public function __construct()
     {
+        //アクセス制限：ログインユーザーのみ
         $this->middleware('auth:users');
 
-        // $this->middleware(function ($request, $next) {
 
-        //     $id = $request->route()->parameter('item');
-        //     if(!is_null($id)){
-        //     $itemId = Product::availableItems()->where('products.id', $id)->exists();
-        //         if(!$itemId){
-        //             abort(404);
-        //         }
-        //     }
-        //     return $next($request);
-        // });
+        //アクセス制限：販売中のItem
+        $this->middleware(function ($request, $next) {
+
+            //Route::get('show/{item}',[ItemController::class, 'show'])->name('items.show');
+            //URL('show/{item}')から{item}取得
+            $id = $request->route()->parameter('item');
+
+            if(!is_null($id)){
+                //以下の条件を満たすProduct::availableItems()に該当itemが存在しているのか
+                //Shop ・・ is_selling = true
+                //Product ・・ is_selling = true
+                //Stockの合計 ・・ 1以上
+
+                $itemId = Product::availableItems()->where('products.id', $id)->exists();
+                    if(!$itemId){
+                        abort(404);
+                    }
+            }
+            return $next($request);
+        });
     }
 
     public function index(Request $request)
     {
 
-        $stocks = DB::table('t_stocks')
-        ->select('product_id',
-        DB::raw('sum(quantity) as quantity'))
-        ->groupBy('product_id')
-        ->having('quantity', '>', 1);
-
-        // $stocksをサブクエリとして設定
-        // products、shops、stocksをjoin句で紐付けて
-        // where句で is_sellingがtrue かの条件指定
-        $products = DB::table('products')
-        ->joinSub($stocks, 'stock', function($join){
-        $join->on('products.id', '=', 'stock.product_id');
-        })
-        ->join('shops', 'products.shop_id', '=', 'shops.id')
-        ->join('secondary_categories', 'products.secondary_category_id', '=','secondary_categories.id')
-        ->join('images as image1', 'products.image1', '=', 'image1.id')
-        ->join('images as image2', 'products.image2', '=', 'image2.id')
-        ->join('images as image3', 'products.image3', '=', 'image3.id')
-        ->join('images as image4', 'products.image4', '=', 'image4.id')
-        ->where('shops.is_selling', true)
-        ->where('products.is_selling', true)
-        ->select('products.id as id', 'products.name as name', 'products.price'
-        ,'products.sort_order as sort_order'
-        ,'products.information', 'secondary_categories.name as category'
-        ,'image1.filename as filename')
-        ->get();
+        //在庫がある商品取得
+        $products = Product::availableItems()->get();
 
         // dd($stocks,$products);
 
