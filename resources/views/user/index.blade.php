@@ -90,8 +90,12 @@
                                 </a>
                             </div>
                         @endforeach
-
                     </div>
+                    <!-- ページング-->
+                    {{ $products->appends([
+                        'sort' => \Request::get('sort'),
+                        'pagination' => \Request::get('pagination')
+                    ])->links() }}
                 </div>
             </div>
         </div>
@@ -101,10 +105,10 @@
         select.addEventListener('change', function(){
             this.form.submit()
         })
+
         const paginate = document.getElementById('pagination')
         paginate.addEventListener('change', function(){
             this.form.submit()
         })
-
     </script>
 </x-app-layout>

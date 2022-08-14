@@ -48,7 +48,7 @@ class ItemController extends Controller
         //販売可能商品取得
         $products = Product::availableItems()
         ->sortOrder($request->sort)
-        ->get();
+        ->paginate($request->pagination);
 
         // dd($stocks,$products);
 
