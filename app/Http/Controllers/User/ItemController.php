@@ -45,8 +45,10 @@ class ItemController extends Controller
     public function index(Request $request)
     {
 
-        //在庫がある商品取得
-        $products = Product::availableItems()->get();
+        //販売可能商品取得
+        $products = Product::availableItems()
+        ->sortOrder($request->sort)
+        ->get();
 
         // dd($stocks,$products);
 
