@@ -138,12 +138,13 @@ class Product extends Model
            //全角スペースを半角に
            $spaceConvert = mb_convert_kana($keyword,'s');
 
-           //空白で区切る
+           //複数キーワード対応：空白で区切る
            $keywords = preg_split('/[\s]+/', $spaceConvert,-1,PREG_SPLIT_NO_EMPTY);
 
-           //単語をループで回す
+           //キーワードをループで回す
            foreach($keywords as $word)
            {
+                //キーワード単位であいまい検索
                $query->where('products.name','like','%'.$word.'%');
            }
 
