@@ -120,6 +120,7 @@ class Product extends Model
 
     }
 
+    //指定の第2カテゴリデータを抽出
     public function scopeSelectCategory($query, $categoryId)
     {
         if($categoryId !== '0')

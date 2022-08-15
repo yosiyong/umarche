@@ -90,6 +90,7 @@
                     <!-- 表示順,件数 end -->
                 </div>
             </form>
+        </div>
     </x-slot>
 
     <div class="py-12">

@@ -45,10 +45,13 @@ class ItemController extends Controller
     public function index(Request $request)
     {
 
+        $categories = PrimaryCategory::with('secondary')->get();
+
         //販売可能商品取得
         $products = Product::availableItems()
+        ->SelectCategory($request->category ?? '0')
         ->sortOrder($request->sort)
-        ->paginate($request->pagination);
+        ->paginate($request->pagination ?? '20');
 
         // dd($stocks,$products);
 
@@ -71,10 +74,9 @@ class ItemController extends Controller
 
         // $products = Product::all();
         // dd($products);
-        return view('user.index',compact('products'));
 
-        // return view('user.index',
-        // compact('products', 'categories'));
+        return view('user.index',
+        compact('products', 'categories'));
     }
 
     public function show($id)
