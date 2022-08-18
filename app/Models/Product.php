@@ -141,7 +141,7 @@ class Product extends Model
            //複数キーワード対応：空白で区切る
            $keywords = preg_split('/[\s]+/', $spaceConvert,-1,PREG_SPLIT_NO_EMPTY);
 
-           //キーワードをループで回す
+           //キーワードをループで回す（複数条件生成）
            foreach($keywords as $word)
            {
                 //キーワード単位であいまい検索
