@@ -21,12 +21,15 @@ Route::get('/', function () {
     return view('user.welcome');
 });
 
-//[/]:ログインしたら商品一覧画面(ItemControllerのindex)を表示する
+Route::get('/uploadpage',[PageController::class,'uploadpage']);
+
+// //[/]:ログインしたら商品一覧画面(ItemControllerのindex)を表示する
 Route::middleware('auth:users')
 ->group(function(){
 	Route::get('/', [ItemController::class,'index'])->name('items.index');
     Route::get('show/{item}',[ItemController::class, 'show'])->name('items.show');
 });
+
 
 // Route::get('/dashboard', function () {
 //     return view('user.dashboard');

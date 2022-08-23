@@ -26,6 +26,7 @@ class ImageService
         $resizedImage = InterventionImage::make($file)->resize(1920, 1080)->encode();
         //保存
         Storage::put('public/' . $folderName . '/' . $fileNameToStore, $resizedImage);
+        //Storage::putFile('public/shops', $fileNameToStore);
 
         //保存ファイル名を返す
         return $fileNameToStore;
