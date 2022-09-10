@@ -8,6 +8,7 @@ use App\Models\Cart;
 use App\Models\User;
 use App\Models\Stock;
 use Illuminate\Support\Facades\Auth;
+use App\Services\CartService;
 
 class CartController extends Controller
 {
@@ -64,8 +65,20 @@ class CartController extends Controller
         return redirect()->route('user.cart.index');
     }
 
+    //購入するボタン処理
     public function checkout()
     {
+
+        ////カート処理サービス
+
+        //ログインユーザーのカート情報
+        $items = Cart::where('user_id', Auth::id())->get();
+
+        //カートデータに紐づく複数のDBデータを一つの配列にマージする処理
+        $products = CartService::getItemsInCart($items);
+        ////
+
+
         $user = User::findOrFail(Auth::id());
         $products = $user->products;
 
