@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendThanksMail;
 use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\User;
 use App\Models\Stock;
 use Illuminate\Support\Facades\Auth;
 use App\Services\CartService;
+use Monolog\Handler\SendGridHandler;
 
 class CartController extends Controller
 {
@@ -74,8 +76,15 @@ class CartController extends Controller
         //ログインユーザーのカート情報
         $items = Cart::where('user_id', Auth::id())->get();
 
-        //カートデータに紐づく複数のDBデータを一つの配列にマージする処理
+        //カートデータに紐づく複数のDBデータを一つの配列として取得する
         $products = CartService::getItemsInCart($items);
+
+        $user = User::findOrFail(Auth::id());
+
+        //メール送信処理にカート情報、ユーザー情報を渡す
+        SendThanksMail::dispatch($products,$user);
+
+        dd("ユーザーメール送信テスト");
         ////
 
 
