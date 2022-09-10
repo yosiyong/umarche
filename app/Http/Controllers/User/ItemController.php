@@ -58,8 +58,8 @@ class ItemController extends Controller
         // Mail::to('yosiyong@gmail.com')
         // ->send(new TestMail());
 
-        //非同期に送信
-        SendThanksMail::dispatch();
+        // //非同期に送信
+        // SendThanksMail::dispatch();
 
         // $categories = PrimaryCategory::with('secondary')
         // ->get();

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\SendThanksMail;
 use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\User;
@@ -11,6 +10,8 @@ use App\Models\Stock;
 use Illuminate\Support\Facades\Auth;
 use App\Services\CartService;
 use Monolog\Handler\SendGridHandler;
+use App\Jobs\SendThanksMail;
+use App\Jobs\SendOrderedMail;
 
 class CartController extends Controller
 {
@@ -71,21 +72,26 @@ class CartController extends Controller
     public function checkout()
     {
 
-        ////カート処理サービス
+        // ////メール送信テスト用
 
-        //ログインユーザーのカート情報
-        $items = Cart::where('user_id', Auth::id())->get();
+        // //ログインユーザーのカート情報
+        // $items = Cart::where('user_id', Auth::id())->get();
 
-        //カートデータに紐づく複数のDBデータを一つの配列として取得する
-        $products = CartService::getItemsInCart($items);
+        // //カートデータに紐づく複数のDBデータを一つの配列として取得する
+        // $products = CartService::getItemsInCart($items);
 
-        $user = User::findOrFail(Auth::id());
+        // $user = User::findOrFail(Auth::id());
 
-        //メール送信処理にカート情報、ユーザー情報を渡す
-        SendThanksMail::dispatch($products,$user);
+        // //メール送信処理にカート情報、ユーザー情報を渡す
+        // SendThanksMail::dispatch($products, $user);
 
-        dd("ユーザーメール送信テスト");
-        ////
+        // //オーナー向けメール送信
+        // foreach($products as $product){
+        //     SendOrderedMail::dispatch($product, $user);
+        // }
+
+        // dd("ユーザーメール送信テスト");
+        // ////
 
 
         $user = User::findOrFail(Auth::id());
@@ -146,6 +152,23 @@ class CartController extends Controller
 
     public function success()
     {
+        //ログインユーザーのカート情報
+        $items = Cart::where('user_id', Auth::id())->get();
+
+        //カートデータに紐づく複数のDBデータを一つの配列として取得する
+        $products = CartService::getItemsInCart($items);
+
+        $user = User::findOrFail(Auth::id());
+
+        //ユーザー向けメール送信処理
+        SendThanksMail::dispatch($products, $user);
+
+        //オーナー向けメール送信
+        foreach($products as $product){
+            SendOrderedMail::dispatch($product, $user);
+        }
+
+        //カート内を空ける
         Cart::where('user_id', Auth::id())->delete();
 
         return redirect()->route('user.items.index');
@@ -153,6 +176,7 @@ class CartController extends Controller
 
     public function cancel()
     {
+
         $user = User::findOrFail(Auth::id());
 
         foreach($user->products as $product){
