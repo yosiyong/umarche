@@ -18,6 +18,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
+        Log::debug('owner',['AuthenticatedSessionController.create']);
         return view('owner.auth.login');
     }
 
@@ -29,11 +30,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         $request->authenticate();
 
         //session再発行
         $request->session()->regenerate();
-        Log::debug('owner', $request->session()->all());
+        Log::debug('owner_store', $request->session()->all());
 
         return redirect()->intended(RouteServiceProvider::OWNER_HOME);
     }
